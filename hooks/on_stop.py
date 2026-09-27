@@ -30,6 +30,14 @@ def main() -> None:
         print(f"[polygraph] verdict: {verdict}", file=sys.stderr)
     except Exception as exc:  # noqa: BLE001
         print(f"[polygraph] on_stop.py error: {exc}", file=sys.stderr)
+        return
+
+    # Record verdict into active run (if any)
+    try:
+        from polygraph.run_recorder import record_verdict
+        record_verdict(result)
+    except Exception as exc:  # noqa: BLE001
+        print(f"[polygraph] run_recorder error: {exc}", file=sys.stderr)
 
 
 if __name__ == "__main__":

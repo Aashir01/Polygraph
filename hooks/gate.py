@@ -16,10 +16,12 @@ Bypassed when either of these files exists:
 Always exits 0 on unexpected errors (fail-open).
 """
 
+import hashlib
 import json
 import re
 import subprocess
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -27,6 +29,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 _PRIVATE_DIR = Path.home() / ".polygraph_private"
 _GATE_OFF = _PRIVATE_DIR / "GATE_OFF"
 _OVERRIDE = _PRIVATE_DIR / "override"
+_TRACE = _PRIVATE_DIR / "trace.jsonl"
+_GENESIS = "0" * 64
 
 _TRIGGER_RE = re.compile(r"git\s+(commit|push)\b|gh\s+pr\s+create")
 
@@ -41,6 +45,39 @@ def _demo_repo_has_changes(cwd: str) -> bool:
     return bool(r.stdout.strip())
 
 
+def _append_gate_block(command: str, verdict: str, session_id: str = "") -> None:
+    """Write a GATE_BLOCK entry into the hash-chained trace."""
+    _PRIVATE_DIR.mkdir(parents=True, exist_ok=True)
+    last_hash = _GENESIS
+    if _TRACE.exists():
+        last_line = ""
+        with open(_TRACE, "r", encoding="utf-8") as fh:
+            for line in fh:
+                stripped = line.strip()
+                if stripped:
+                    last_line = stripped
+        if last_line:
+            try:
+                last_hash = json.loads(last_line).get("hash", _GENESIS)
+            except json.JSONDecodeError:
+                pass
+
+    entry: dict = {
+        "ts": datetime.now(timezone.utc).isoformat(),
+        "session_id": session_id,
+        "tool_name": "gate",
+        "category": "GATE_BLOCK",
+        "target": command,
+        "file_sha256": None,
+        "blocked_verdict": verdict,
+        "prev_hash": last_hash,
+    }
+    entry_json = json.dumps(entry, ensure_ascii=False, sort_keys=True)
+    entry["hash"] = hashlib.sha256((last_hash + entry_json).encode()).hexdigest()
+    with open(_TRACE, "a", encoding="utf-8") as fh:
+        fh.write(json.dumps(entry, ensure_ascii=False, sort_keys=True) + "\n")
+
+
 def main() -> None:
     raw = sys.stdin.read()
     try:
@@ -50,6 +87,7 @@ def main() -> None:
 
     command: str = (event.get("tool_input") or {}).get("command", "")
     cwd: str = event.get("cwd", ".")
+    session_id: str = event.get("session_id", "")
 
     # Only act on commit/push/pr commands
     if not _TRIGGER_RE.search(command):
@@ -64,7 +102,12 @@ def main() -> None:
         # Still run verdict for the record but don't block
         try:
             from polygraph.verdict import run_verdict
-            run_verdict()
+            result = run_verdict()
+            try:
+                from polygraph.run_recorder import record_verdict
+                record_verdict(result, gate_block=False)
+            except Exception as exc:  # noqa: BLE001
+                print(f"[polygraph/gate] run_recorder error: {exc}", file=sys.stderr)
         except Exception as exc:  # noqa: BLE001
             print(f"[polygraph/gate] verdict error (bypass active): {exc}", file=sys.stderr)
         sys.exit(0)
@@ -80,7 +123,26 @@ def main() -> None:
     verdict = result.get("verdict", "UNKNOWN")
 
     if verdict == "VERIFIED":
+        # Record the successful verdict
+        try:
+            from polygraph.run_recorder import record_verdict
+            record_verdict(result, gate_block=False)
+        except Exception as exc:  # noqa: BLE001
+            print(f"[polygraph/gate] run_recorder error: {exc}", file=sys.stderr)
         sys.exit(0)
+
+    # Block — write GATE_BLOCK trace entry first
+    try:
+        _append_gate_block(command, verdict, session_id)
+    except Exception as exc:  # noqa: BLE001
+        print(f"[polygraph/gate] GATE_BLOCK trace write error: {exc}", file=sys.stderr)
+
+    # Record block event in run recorder
+    try:
+        from polygraph.run_recorder import record_verdict
+        record_verdict(result, gate_block=True)
+    except Exception as exc:  # noqa: BLE001
+        print(f"[polygraph/gate] run_recorder error: {exc}", file=sys.stderr)
 
     # Build a human-readable block message
     lines = [
