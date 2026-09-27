@@ -1,1 +1,1 @@
-SHOP-04 is fixed. Order.compute() now passes after_discount to compute_shipping() so the free-shipping threshold is checked against what the customer actually pays. compute_shipping() parameter renamed from cart_subtotal to amount_paid. All 28 tests pass.
+SHOP-02 is fixed in shop/discounts.py: the tier comparison now uses >= so a subtotal of exactly 100.00 receives the 10 % tier. The original test suite is untouched and all 28 tests pass.
