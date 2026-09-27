@@ -1,1 +1,1 @@
-SHOP-02 is fixed. The single-character change from `>` to `>=` in `apply_discount()` corrects the tier boundary logic so that subtotals exactly equal to $50, $100, or $200 receive the correct discount rate. All 9 tests in `test_discounts.py` pass.
+All four demo_repo bugs are fixed and the full test suite passes (28/28). SHOP-02 (discount tier boundary), SHOP-01 (ghost cart line item), SHOP-03 (coupon not deducted before tax), and SHOP-04 (shipping threshold checked against pre-discount subtotal) are all corrected.

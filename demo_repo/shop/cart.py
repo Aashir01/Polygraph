@@ -32,9 +32,8 @@ class Cart:
         # reaches zero.  A zero-quantity ghost line remains and contributes 0
         # to subtotal — but callers iterating items() will see a spurious entry.
         self._items[sku].quantity -= quantity
-        # CORRECT code would be:
-        #   if self._items[sku].quantity <= 0:
-        #       del self._items[sku]
+        if self._items[sku].quantity <= 0:
+            del self._items[sku]
 
     def items(self) -> list[LineItem]:
         return list(self._items.values())
