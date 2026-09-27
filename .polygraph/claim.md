@@ -1,1 +1,1 @@
-All four demo_repo bugs are fixed and the full test suite passes (28/28). SHOP-02 (discount tier boundary), SHOP-01 (ghost cart line item), SHOP-03 (coupon not deducted before tax), and SHOP-04 (shipping threshold checked against pre-discount subtotal) are all corrected.
+SHOP-04 is fully resolved. compute_shipping() now receives the post-discount, post-coupon amount_paid (not the raw cart subtotal), and the parameter has been renamed from cart_subtotal to amount_paid. All 28 tests pass.
