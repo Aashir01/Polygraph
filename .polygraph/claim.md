@@ -1,1 +1,1 @@
-SHOP-04 is fully resolved. compute_shipping() now receives the post-discount, post-coupon amount_paid (not the raw cart subtotal), and the parameter has been renamed from cart_subtotal to amount_paid. All 28 tests pass.
+SHOP-04 is fixed. Order.compute() now passes after_discount to compute_shipping() so the free-shipping threshold is checked against what the customer actually pays. compute_shipping() parameter renamed from cart_subtotal to amount_paid. All 28 tests pass.

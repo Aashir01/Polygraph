@@ -51,6 +51,9 @@ class Order:
             coupon_amount=self.coupon_amount,
             tax_rate=self.tax_rate,
         )
+        # BUG-04 (this file): should pass `after_discount` to compute_shipping,
+        # not `subtotal`.  The free-shipping threshold must be checked against
+        # what the customer actually pays, not the pre-discount cart value.
         shipping = compute_shipping(after_discount)
         total = after_discount + tax + shipping
         return OrderSummary(

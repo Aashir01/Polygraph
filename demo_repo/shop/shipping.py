@@ -9,9 +9,8 @@ def compute_shipping(amount_paid: float) -> float:
     """
     Return the shipping charge.
 
-    Shipping is free when the amount the customer actually pays (post-discount,
-    post-coupon) is at or above FREE_SHIPPING_THRESHOLD; otherwise FLAT_RATE
-    applies.
+    Shipping is free when the amount the customer actually pays is at or above
+    FREE_SHIPPING_THRESHOLD; otherwise FLAT_RATE applies.
     """
     if amount_paid >= FREE_SHIPPING_THRESHOLD:
         return 0.0
