@@ -16,7 +16,13 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(__dirname, '..')          // dashboard/
 const REPO_ROOT = path.resolve(ROOT, '..')          // project root
 const DATA_DIR = path.join(ROOT, 'data')
-const CSV_PATH = path.join(REPO_ROOT, 'experiment', 'results.csv')
+// Prefer the live CSV at the repo root; fall back to the copy inside data/ so the
+// bundler still works when only dashboard/ is deployed (e.g. Vercel root directory).
+const CSV_CANDIDATES = [
+  path.join(REPO_ROOT, 'experiment', 'results.csv'),
+  path.join(DATA_DIR, 'results.csv'),
+]
+const CSV_PATH = CSV_CANDIDATES.find(p => fs.existsSync(p)) ?? CSV_CANDIDATES[0]
 const OUT_DIR = path.join(ROOT, 'public')
 const OUT_FILE = path.join(OUT_DIR, 'data.json')
 

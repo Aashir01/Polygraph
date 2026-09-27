@@ -6,7 +6,7 @@ A verification gate for AI coding agents, built into IBM Bob with lifecycle hook
 Other tools guard what an agent is allowed to **do**. Polygraph guards what it is
 allowed to **claim**.
 
-- Dashboard: _&lt;add Vercel URL&gt;_
+- Dashboard: https://dashboard-aashir01s-projects.vercel.app
 - Demo video: _&lt;add video URL&gt;_
 - Bob task-session screenshots: [bob_sessions/](bob_sessions/)
 

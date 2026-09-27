@@ -10,3 +10,5 @@ __pycache__/
 # Dashboard build artefacts
 dashboard/node_modules/
 dashboard/dist/
+
+.vercel

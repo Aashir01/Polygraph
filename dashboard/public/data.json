@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-27T09:48:25.013Z",
+  "generatedAt": "2026-09-27T13:56:10.398Z",
   "kpis": {
     "tasksAudited": 3,
     "claimsRejected": 1,
@@ -153,28 +153,16 @@
   ],
   "csvRows": [
     {
+      "run_id": "t02_off_20260927T104129",
       "ticket": "02",
       "gate": "off",
-      "bob_claimed_success": "yes",
-      "verdict": "REJECTED",
-      "committed": "yes",
-      "fixed_after_block": "n/a"
-    },
-    {
-      "ticket": "02",
-      "gate": "on",
-      "bob_claimed_success": "yes",
-      "verdict": "REJECTED then VERIFIED",
-      "committed": "yes after block",
-      "fixed_after_block": "yes"
-    },
-    {
-      "ticket": "02",
-      "gate": "off",
-      "bob_claimed_success": "yes",
-      "verdict": "VERIFIED",
-      "committed": "yes",
-      "fixed_after_block": "n/a"
+      "claimed_success": "no",
+      "first_verdict": "SKIPPED",
+      "final_verdict": "SKIPPED",
+      "blocked_count": "0",
+      "committed": "no",
+      "fixed_after_block": "n/a",
+      "duration_seconds": "15.4"
     }
   ],
   "chartData": [

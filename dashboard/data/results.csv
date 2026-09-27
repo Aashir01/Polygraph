@@ -1,0 +1,2 @@
+run_id,ticket,gate,claimed_success,first_verdict,final_verdict,blocked_count,committed,fixed_after_block,duration_seconds
+t02_off_20260927T104129,02,off,no,SKIPPED,SKIPPED,0,no,n/a,15.4
