@@ -21,6 +21,15 @@
             "timeout": 10
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python hooks/inject.py",
+            "timeout": 10
+          }
+        ]
       }
     ],
     "PreToolUse": [
@@ -31,6 +40,16 @@
             "type": "command",
             "command": "python hooks/record.py",
             "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "execute_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python hooks/gate.py",
+            "timeout": 60
           }
         ]
       }
@@ -54,6 +73,15 @@
             "type": "command",
             "command": "python hooks/record.py",
             "timeout": 10
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python hooks/on_stop.py",
+            "timeout": 120
           }
         ]
       }

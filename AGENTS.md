@@ -23,6 +23,7 @@ dashboard/       # Streamlit dashboard app
 notebooks/       # Jupyter analysis notebooks
 models/          # serialised model artefacts
 data/raw/        # gitignored raw data (do not commit)
+.polygraph/      # verdict artefacts (verdict.json, report.md, claim.md)
 ```
 
 ## Commands
@@ -86,3 +87,6 @@ streamlit run dashboard/app.py
 - `UserPromptSubmit` and `Stop` hooks must NOT have a `matcher` field in `settings.json`.
 - `pg_test.py` always exits 0 — it is safe to call in hooks and CI without masking other failures.
 - The chain is append-only; never modify or delete lines in `trace.jsonl` (detected by `verify_chain`).
+- **When you finish a task in `demo_repo/`, write your final claim to `.polygraph/claim.md`.**
+  The verdict engine reads this file to check whether your stated conclusions are supported by
+  the test evidence.  A missing or empty claim file is treated as no claim made (neutral).
