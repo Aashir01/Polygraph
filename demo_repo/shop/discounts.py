@@ -29,7 +29,7 @@ def apply_discount(subtotal: float, coupon_amount: float = 0.0) -> float:
         # BUG-02: strict '>' means a subtotal that equals the threshold exactly
         # misses the discount.  E.g. subtotal=100.0 → rate stays 0.0 instead
         # of 0.10.  The correct operator is '>='.
-        if subtotal >= threshold:
+        if subtotal > threshold:
             rate = tier_rate
             break
 
