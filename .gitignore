@@ -1,0 +1,9 @@
+﻿.env
+data/raw/
+
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+*.egg-info/
+bob_sessions/
