@@ -1,0 +1,1 @@
+SHOP-02 is fixed. The single-character change from `>` to `>=` in `apply_discount()` corrects the tier boundary logic so that subtotals exactly equal to $50, $100, or $200 receive the correct discount rate. All 9 tests in `test_discounts.py` pass.
